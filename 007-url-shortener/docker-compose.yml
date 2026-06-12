@@ -1,0 +1,32 @@
+# Local dev: `docker compose up -d db` gives you Postgres,
+# `docker compose up` runs the whole stack.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: shortly
+      POSTGRES_PASSWORD: shortly
+      POSTGRES_DB: shortly
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shortly"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgres://shortly:shortly@db:5432/shortly?sslmode=disable
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

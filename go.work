@@ -2,5 +2,8 @@ go 1.26.2
 
 use (
 	.
-	./sqlc-tutorial
+	./006-sqlc-tutorial
+	./007-url-shortener
+	./008-jwt-auth
+	./009-evm-svm-event-listeners
 )

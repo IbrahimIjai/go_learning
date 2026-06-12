@@ -1,0 +1,18 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    # Where the typed queries are written by hand:
+    queries: "db/query.sql"
+    # sqlc reads the schema from the goose migrations directly — it
+    # understands goose's "-- +goose Up/Down" markers and only applies
+    # the Up statements. One source of truth for the table shape.
+    schema: "migrations"
+    gen:
+      go:
+        package: "db"
+        out: "db"
+        # Generate code against pgx/v5 (matches the driver main.go uses),
+        # not database/sql.
+        sql_package: "pgx/v5"
+        emit_interface: true   # also emit a Querier interface — handy for tests
+        emit_empty_slices: true
